@@ -50,7 +50,7 @@ resp, err := client.Events.BatchUpload(context.TODO(), events)
 ## Testing
 
 ```
-go test -v -race -coverprofile coverage.txt -covermode atomic ./... && go tool cover -html=coverage.txt -o coverage.html
+go test -v -race -coverprofile coverage.txt -covermode atomic ./... && go tool cover -func=coverage.txt
 
 PASS
 coverage: 100.0% of statements

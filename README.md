@@ -1,6 +1,8 @@
 # go-amplitude
 
-    import "github.com/pghq/go-amplitude"
+[![go-amplitude release (latest SemVer)](https://img.shields.io/github/v/release/pghq/go-amplitude?sort=semver)](https://github.com/pghq/go-amplitude/releases)
+[![Test Status](https://github.com/pghq/go-amplitude/workflows/tests/badge.svg)](https://github.com/pghq/go-amplitude/actions?query=workflow%3Atests)
+[![Test Coverage](https://codecov.io/gh/pghq/go-amplitude/branch/master/graph/badge.svg)](https://codecov.io/gh/pghq/go-amplitude)
 
 `go-amplitude` is a Golang client for the Amplitude analytics application.
 

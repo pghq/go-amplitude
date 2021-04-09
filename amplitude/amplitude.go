@@ -20,13 +20,18 @@ const (
 
 // Client allows interaction with amplitude services
 type Client struct {
+	// BaseURL for all API requests. Exposed services should
+	// use relative paths for making requests.
 	BaseURL   *url.URL
 	UserAgent string
 	APIKey    string
 
 	client *http.Client
+
+	// common service is shared between all exposed services
 	common service
 
+	// Exposed services for interacting with the various Amplitude APIs
 	BatchEventUpload *BatchEventUploadService
 }
 
@@ -83,6 +88,7 @@ func (b RequestBody) WithValue(key string, v interface{}) RequestBody {
 
 // NewRequest provides an http request to be sent to Amplitude
 func (c *Client) NewRequest(ctx context.Context, method, endpoint string, body RequestBody) (*http.Request, error) {
+	// if no endpoint is specified, then the base URL is used
 	var u *url.URL
 	if endpoint == "" {
 		u = c.BaseURL
@@ -105,6 +111,7 @@ func (c *Client) NewRequest(ctx context.Context, method, endpoint string, body R
 		}
 	}
 
+	// keep track of the context for all API requests will contain the context
 	req, err := http.NewRequestWithContext(ctx, method, u.String(), buf)
 	if err != nil {
 		return nil, err
@@ -137,12 +144,15 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 		return nil, err
 	}
 
+	// if the response is an API error that we know about, this propagate it up the stack,
+	// if its one we don't know about check the error context for additional information
 	if err := AsError(resp); err != nil {
 		return nil, err
 	}
 
 	defer resp.Body.Close()
 
+	// we only support json responses (and so does the amplitude API)
 	switch v := v.(type) {
 	case nil:
 	default:
@@ -165,6 +175,8 @@ type Error struct {
 // Code is an integer denoting what error has been received
 func (e *Error) Code() int {
 	raw := e.Context["code"]
+	// JSON unmarshals all numbers as floating point values,
+	// but the code is actually expected to be an integer.
 	if code, ok := raw.(float64); ok {
 		return int(code)
 	}

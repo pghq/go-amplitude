@@ -25,6 +25,7 @@ func setup() (*Client, *http.ServeMux, func()) {
 	return client, handler, server.Close
 }
 
+// testRequest checks that an http request meets the bare minimum requirements
 func testRequest(t *testing.T, req *http.Request, expectedEndpoint string) {
 	t.Helper()
 
@@ -41,6 +42,7 @@ func testRequest(t *testing.T, req *http.Request, expectedEndpoint string) {
 	}
 }
 
+// testError checks that an http response error meets the bare minimum requirements
 func testError(t *testing.T, err *Error, expectedCode int, expectedMessage string) {
 	t.Helper()
 
@@ -67,8 +69,8 @@ func testError(t *testing.T, err *Error, expectedCode int, expectedMessage strin
 }
 
 func TestNew(t *testing.T) {
-	t.Run("without API key", func(t *testing.T) {
-		c := New("")
+	t.Run("basic client instantiation", func(t *testing.T) {
+		c := New("your-amplitude-key")
 
 		if got, want := c.BaseURL.String(), defaultBaseURL; got != want {
 			t.Errorf("BaseURL = %v; expected %v", got, want)
@@ -108,6 +110,7 @@ func TestClient_NewRequestBody(t *testing.T) {
 	})
 }
 
+// TestRequestBody_WithValue
 func TestRequestBody_WithValue(t *testing.T) {
 	t.Run("without API key", func(t *testing.T) {
 		c := New("")

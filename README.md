@@ -47,27 +47,3 @@ client := amplitude.New("your-amplitude-key")
 events := []amplitude.Event{{}}
 resp, err := client.Events.BatchUpload(context.TODO(), events)
 ```
-
-## Testing
-
-```
-go test -v -race -coverprofile coverage.txt -covermode atomic ./... && go tool cover -func=coverage.txt
-
-PASS
-coverage: 100.0% of statements
-ok      github.com/pghq/go-amplitude/amplitude  0.194s  coverage: 100.0% of statements
-github.com/pghq/go-amplitude/amplitude/amplitude.go:38:                 New             100.0%
-github.com/pghq/go-amplitude/amplitude/amplitude.go:55:                 WithHttpClient  100.0%
-github.com/pghq/go-amplitude/amplitude/amplitude.go:67:                 NewRequestBody  100.0%
-github.com/pghq/go-amplitude/amplitude/amplitude.go:78:                 WithValue       100.0%
-github.com/pghq/go-amplitude/amplitude/amplitude.go:85:                 NewRequest      100.0%
-github.com/pghq/go-amplitude/amplitude/amplitude.go:126:                Do              100.0%
-github.com/pghq/go-amplitude/amplitude/amplitude.go:166:                Code            100.0%
-github.com/pghq/go-amplitude/amplitude/amplitude.go:176:                Message         100.0%
-github.com/pghq/go-amplitude/amplitude/amplitude.go:186:                Error           100.0%
-github.com/pghq/go-amplitude/amplitude/amplitude.go:191:                AsError         100.0%
-github.com/pghq/go-amplitude/amplitude/batch_event_upload.go:67:        String          100.0%
-github.com/pghq/go-amplitude/amplitude/batch_event_upload.go:73:        Send            100.0%
-total:                                                                  (statements)    100.0%
-
-```

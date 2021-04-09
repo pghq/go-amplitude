@@ -41,7 +41,7 @@ client := amplitude.New("your-amplitude-key")
 
 // send a batch of events
 events := []amplitude.Event{{}}
-resp, err := client.BatchEventUpload.Send(context.TODO(), events)
+resp, err := client.Events.BatchUpload(context.TODO(), events)
 ```
 
 ## Testing

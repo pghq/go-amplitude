@@ -31,8 +31,7 @@ type Client struct {
 	// common service is shared between all exposed services
 	common service
 
-	// Exposed services for interacting with the various Amplitude APIs
-	BatchEventUpload *BatchEventUploadService
+	Events *EventsService
 }
 
 type service struct {
@@ -51,7 +50,7 @@ func New(apiKey string) *Client {
 	}
 
 	c.common.client = &c
-	c.BatchEventUpload = (*BatchEventUploadService)(&c.common)
+	c.Events = (*EventsService)(&c.common)
 
 	return &c
 }

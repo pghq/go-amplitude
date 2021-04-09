@@ -1,20 +1,9 @@
 package amplitude
 
-import (
-	"context"
-	"errors"
-	"fmt"
-	"net"
-	"net/http"
-	"time"
-)
+import "net"
 
-const (
-	batchEventUploadEndpoint = "/batch"
-)
-
-// BatchEventUploadService provides a service for sending analytics events in bulk to Amplitude
-type BatchEventUploadService service
+// EventsService provides access to events related functions
+type EventsService service
 
 // Event is the base analytic structure for capturing user activity
 type Event struct {
@@ -53,38 +42,4 @@ type Event struct {
 	ID                  int                    `json:"event_id,omitempty"`
 	SessionID           int                    `json:"session_id,omitempty"`
 	InsertID            string                 `json:"insert_id,omitempty"`
-}
-
-// BatchEventsSuccessSummary is expected to be returned for all successful requests
-type BatchEventsSuccessSummary struct {
-	Code           int   `json:"code"`
-	EventsIngested int   `json:"events_ingested"`
-	PayloadSize    int   `json:"payload_size_bytes"`
-	UploadTime     int64 `json:"server_upload_time"`
-}
-
-// String converts the summary response to a pretty string format
-func (s *BatchEventsSuccessSummary) String() string {
-	timestamp := time.Unix(0, s.UploadTime*int64(time.Millisecond)).UTC()
-	return fmt.Sprintf("%d events ingested (%d bytes) at %s", s.EventsIngested, s.PayloadSize, timestamp)
-}
-
-// Send analytics events to Amplitude using the BatchEventUpload API
-func (s *BatchEventUploadService) Send(ctx context.Context, events []Event) (*BatchEventsSuccessSummary, error) {
-	if len(events) == 0 {
-		return nil, errors.New("no events to send")
-	}
-
-	body := s.client.NewRequestBody().WithValue("events", events)
-	req, err := s.client.NewRequest(ctx, http.MethodPost, batchEventUploadEndpoint, body)
-	if err != nil {
-		return nil, err
-	}
-
-	var res BatchEventsSuccessSummary
-	if _, err := s.client.Do(req, &res); err != nil {
-		return nil, err
-	}
-
-	return &res, nil
 }

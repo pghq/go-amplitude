@@ -41,7 +41,7 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 		client, _, teardown := setup()
 		defer teardown()
 
-		_, err := client.BatchEventUpload.Send(context.TODO(), nil)
+		_, err := client.Events.BatchUpload(context.TODO(), nil)
 
 		if err == nil {
 			t.Fatal("Error is nil; expected value")
@@ -56,7 +56,7 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 		client, _, teardown := setup()
 		defer teardown()
 
-		_, err := client.BatchEventUpload.Send(nil, []Event{{}})
+		_, err := client.Events.BatchUpload(nil, []Event{{}})
 
 		if err == nil {
 			t.Fatal("Error is nil; expected value")
@@ -69,7 +69,7 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 
 		ctx, cancel := context.WithTimeout(context.TODO(), 0)
 		defer cancel()
-		_, err := client.BatchEventUpload.Send(ctx, []Event{{}})
+		_, err := client.Events.BatchUpload(ctx, []Event{{}})
 
 		if err == nil {
 			t.Fatal("Error is nil; expected value")
@@ -109,7 +109,7 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 			}`)
 		})
 
-		resp, err := client.BatchEventUpload.Send(context.TODO(), events)
+		resp, err := client.Events.BatchUpload(context.TODO(), events)
 
 		if err != nil {
 			t.Fatalf("Error = %v; expected no error", err)

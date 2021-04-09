@@ -57,7 +57,7 @@ resp, err := client.BatchEventUpload.Send(context.TODO(), events)
 ----
 
 ```
-go test -v -coverprofile cover.out -race ./... && go tool cover -func=cover.out || rm -rf cover.out
+go test -v -coverprofile cover.out -race ./... && go tool cover -func=cover.out ; rm -rf cover.out
 
 PASS
 coverage: 100.0% of statements

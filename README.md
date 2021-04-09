@@ -3,6 +3,7 @@
 [![go-amplitude release (latest SemVer)](https://img.shields.io/github/v/release/pghq/go-amplitude?sort=semver)](https://github.com/pghq/go-amplitude/releases)
 [![Test Status](https://github.com/pghq/go-amplitude/workflows/tests/badge.svg)](https://github.com/pghq/go-amplitude/actions?query=workflow%3Atests)
 [![Test Coverage](https://codecov.io/gh/pghq/go-amplitude/branch/master/graph/badge.svg)](https://codecov.io/gh/pghq/go-amplitude)
+[![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/4794/badge)](https://bestpractices.coreinfrastructure.org/projects/4794)
 
 `go-amplitude` is a Golang client for the Amplitude analytics application.
 
@@ -49,7 +50,7 @@ resp, err := client.Events.BatchUpload(context.TODO(), events)
 ## Testing
 
 ```
-go test -v -race -coverprofile cover.out -covermode atomic ./... && go tool cover -func=cover.out ; rm -rf cover.out
+go test -v -race -coverprofile coverage.txt -covermode atomic ./... && go tool cover -html=coverage.txt -o coverage.html
 
 PASS
 coverage: 100.0% of statements

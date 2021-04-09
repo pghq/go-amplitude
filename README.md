@@ -1,14 +1,10 @@
 # go-amplitude
 
-----
-
     import "github.com/pghq/go-amplitude"
 
 `go-amplitude` is a Golang client for the Amplitude analytics application.
 
 ## Support
-
-----
 
 - [ ] HTTP API V2 
 - [x] Batch Event Upload API
@@ -28,15 +24,11 @@
 
 ## Installation
 
-----
-
 go-amplitude may be installed using the go get command:
 ```
 go get github.com/pghq/go-amplitude
 ```
 ## Usage
-
-----
 
 ```
 import "github.com/pghq/go-amplitude/amplitude"
@@ -54,10 +46,8 @@ resp, err := client.BatchEventUpload.Send(context.TODO(), events)
 
 ## Testing
 
-----
-
 ```
-go test -v -coverprofile cover.out -race ./... && go tool cover -func=cover.out ; rm -rf cover.out
+go test -v -race -coverprofile cover.out -covermode atomic ./... && go tool cover -func=cover.out ; rm -rf cover.out
 
 PASS
 coverage: 100.0% of statements

@@ -1,13 +1,12 @@
-// XXX: Add comments
 package amplitude
 
 import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 	"testing"
 )
 
@@ -17,7 +16,7 @@ func TestBatchEventsSuccessSummary_String(t *testing.T) {
 		want := "0 events ingested (0 bytes) at 1970-01-01 00:00:00 +0000 UTC"
 
 		if s.String() != want {
-			t.Errorf("Summary = %s; expected %s", s.String(), want)
+			t.Errorf("Summary = %s;\n Expected %s", s.String(), want)
 		}
 	})
 
@@ -31,7 +30,7 @@ func TestBatchEventsSuccessSummary_String(t *testing.T) {
 		want := "5 events ingested (10 bytes) at 1970-01-02 00:00:00 +0000 UTC"
 
 		if s.String() != want {
-			t.Errorf("Summary = %s; expected %s", s.String(), want)
+			t.Errorf("Summary = %s;\n Expected %s", s.String(), want)
 		}
 	})
 }
@@ -44,11 +43,11 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 		_, err := client.Events.BatchUpload(context.TODO(), nil)
 
 		if err == nil {
-			t.Fatal("Error is nil; expected value")
+			t.Fatal("Error is nil;\n Expected value")
 		}
 
 		if got, want := err.Error(), "no events to send"; got != want {
-			t.Errorf("Error = %s; expected %s", got, want)
+			t.Errorf("Error = %s;\n Expected %s", got, want)
 		}
 	})
 
@@ -59,7 +58,7 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 		_, err := client.Events.BatchUpload(nil, []Event{{}})
 
 		if err == nil {
-			t.Fatal("Error is nil; expected value")
+			t.Fatal("Error is nil;\n Expected value")
 		}
 	})
 
@@ -72,11 +71,11 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 		_, err := client.Events.BatchUpload(ctx, []Event{{}})
 
 		if err == nil {
-			t.Fatal("Error is nil; expected value")
+			t.Fatal("Error is nil;\n Expected value")
 		}
 
 		if got, want := err, ctx.Err(); got != want {
-			t.Errorf("Error = %v; expected %v", got, want)
+			t.Errorf("Error = %v;\n Expected %v", got, want)
 		}
 	})
 
@@ -91,14 +90,17 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 
 		mux.HandleFunc(batchEventUploadEndpoint, func(w http.ResponseWriter, r *http.Request) {
 			if r.Method != http.MethodPost {
-				t.Errorf("Method = %s; expected %s", r.Method, http.MethodPost)
+				t.Errorf("Method = %s;\n Expected %s", r.Method, http.MethodPost)
 			}
 
-			data, _ := json.Marshal(events)
-			want := fmt.Sprintf("{\"events\":%s}\n", string(data))
+			want := make(map[string]interface{})
+			_ = json.Unmarshal([]byte(fmt.Sprintf(`{"events": [%s]}`, data)), &want)
 
-			if got, _ := io.ReadAll(r.Body); string(got) != want {
-				t.Errorf("Body = %s; expected %s", got, want)
+			got := make(map[string]interface{})
+			_ = json.NewDecoder(r.Body).Decode(&got)
+
+			if !reflect.DeepEqual(got["events"], want["events"]) {
+				t.Errorf("Body[\"events\"] = %v;\n Expected %v", got["events"], want["events"])
 			}
 
 			_, _ = fmt.Fprint(w, `{
@@ -112,23 +114,23 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 		resp, err := client.Events.BatchUpload(context.TODO(), events)
 
 		if err != nil {
-			t.Fatalf("Error = %v; expected no error", err)
+			t.Fatalf("Error = %v;\n Expected no error", err)
 		}
 
 		if got, want := resp.Code, 200; got != want {
-			t.Errorf("Code = %d; expected %d", got, want)
+			t.Errorf("Code = %d;\n Expected %d", got, want)
 		}
 
 		if got, want := resp.EventsIngested, 50; got != want {
-			t.Errorf("EventsIngested = %d; expected %d", got, want)
+			t.Errorf("EventsIngested = %d;\n Expected %d", got, want)
 		}
 
 		if got, want := resp.PayloadSize, 50; got != want {
-			t.Errorf("PayloadSize = %d; expected %d", got, want)
+			t.Errorf("PayloadSize = %d;\n Expected %d", got, want)
 		}
 
 		if got, want := resp.UploadTime, int64(1396381378123); got != want {
-			t.Errorf("UploadTime = %d; expected %d", got, want)
+			t.Errorf("UploadTime = %d;\n Expected %d", got, want)
 		}
 	})
 }

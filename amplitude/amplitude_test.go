@@ -1,4 +1,3 @@
-// XXX: Add comments
 package amplitude
 
 import (

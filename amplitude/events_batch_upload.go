@@ -31,7 +31,7 @@ func (s *BatchEventsSuccessSummary) String() string {
 // for example through scheduled jobs, rather than in a continuous realtime stream.
 // Due to the higher rate of data that is permitted to this endpoint, data sent to this endpoint
 // may be delayed based on load.
-func (s *EventsService) BatchUpload(ctx context.Context, events []Event) (*BatchEventsSuccessSummary, error) {
+func (s *EventsService) BatchUpload(ctx context.Context, events []*Event) (*BatchEventsSuccessSummary, error) {
 	if len(events) == 0 {
 		return nil, errors.New("no events to send")
 	}

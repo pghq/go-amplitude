@@ -55,7 +55,7 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 		client, _, teardown := setup()
 		defer teardown()
 
-		_, err := client.Events.BatchUpload(nil, []Event{{}})
+		_, err := client.Events.BatchUpload(nil, []*Event{{}})
 
 		if err == nil {
 			t.Fatal("Error is nil;\n Expected value")
@@ -68,7 +68,7 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 
 		ctx, cancel := context.WithTimeout(context.TODO(), 0)
 		defer cancel()
-		_, err := client.Events.BatchUpload(ctx, []Event{{}})
+		_, err := client.Events.BatchUpload(ctx, []*Event{{}})
 
 		if err == nil {
 			t.Fatal("Error is nil;\n Expected value")
@@ -86,7 +86,7 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 		var event Event
 		data, _ := ioutil.ReadFile("testdata/event.json")
 		_ = json.Unmarshal(data, &event)
-		events := []Event{event}
+		events := []*Event{&event}
 
 		mux.HandleFunc(batchEventUploadEndpoint, func(w http.ResponseWriter, r *http.Request) {
 			if r.Method != http.MethodPost {

@@ -8,24 +8,6 @@
 
 `go-amplitude` is a Golang client for the Amplitude analytics application.
 
-## Support
-
-![Batch Event Upload API](https://img.shields.io/static/v1?label=Batch+Event+Upload+API&message=SUPPORTED&color=success)
-![HTTP API V2](https://img.shields.io/static/v1?label=HTTP+API+V2&message=UNSUPPORTED&color=inactive)
-![Identify API](https://img.shields.io/static/v1?label=Identify+API&message=UNSUPPORTED&color=inactive)
-![Attribution API](https://img.shields.io/static/v1?label=Attribution+API&message=UNSUPPORTED&color=inactive)
-![Behavioral Cohorts API](https://img.shields.io/static/v1?label=Behavioral+Cohorts+API&message=UNSUPPORTED&color=inactive)
-![Chart Annotations API](https://img.shields.io/static/v1?label=Chart+Annotations+API&message=UNSUPPORTED&color=inactive)
-![Dashboard REST API](https://img.shields.io/static/v1?label=Dashboard+REST+API&message=UNSUPPORTED&color=inactive)
-![Export API](https://img.shields.io/static/v1?label=Export+API&message=UNSUPPORTED&color=inactive)
-![Group Identify API](https://img.shields.io/static/v1?label=Group+Identify+API&message=UNSUPPORTED&color=inactive)
-![Releases API](https://img.shields.io/static/v1?label=Releases+API&message=UNSUPPORTED&color=inactive)
-![SCIM API](https://img.shields.io/static/v1?label=SCIM+API&message=UNSUPPORTED&color=inactive)
-![Taxonomy API](https://img.shields.io/static/v1?label=Taxonomy+API&message=UNSUPPORTED&color=inactive)
-![User Privacy API](https://img.shields.io/static/v1?label=User+Privacy+API&message=UNSUPPORTED&color=inactive)
-![User Profile API](https://img.shields.io/static/v1?label=User+Profile+API&message=UNSUPPORTED&color=inactive)
-![HTTP API (Deprecated)](https://img.shields.io/static/v1?label=HTTP+API+(Deprecated)&message=UNSUPPORTED&color=inactive)
-
 ## Installation
 
 go-amplitude may be installed using the go get command:
@@ -42,8 +24,8 @@ To create a new client for use with the Amplitude API:
 
 ```
 client := amplitude.New("your-amplitude-key")
-
-// send a batch of events
-events := []amplitude.Event{{}}
-resp, err := client.Events.BatchUpload(context.TODO(), events)
+resp, err := client.Events.Send(context.TODO())
+if err != nil{
+    panic(err)
+}
 ```

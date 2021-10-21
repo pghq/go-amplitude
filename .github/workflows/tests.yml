@@ -2,11 +2,12 @@ name: tests
 on:
   push:
     branches:
-      - master
+      - develop
   
   pull_request:
     branches:
       - master
+      - develop
 
 jobs:
   test:
@@ -16,7 +17,7 @@ jobs:
     
       - uses: actions/setup-go@v2
         with:
-          go-version: 1.16.x
+          go-version: 1.17.x
     
       - run: go version
 
@@ -24,7 +25,7 @@ jobs:
         run: go vet ./...
     
       - name: Run go test
-        run: go test -v -race -coverprofile coverage.txt -covermode atomic ./... && go tool cover -func=coverage.txt
+        run: go test -v -race -timeout 60s -coverprofile coverage.txt -covermode atomic ./... && go tool cover -func=coverage.txt
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1

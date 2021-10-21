@@ -1,3 +1,16 @@
+// Copyright 2021 PGHQ. All Rights Reserved.
+//
+// Licensed under the GNU General Public License, Version 3 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// Package amplitude provides a http client for working with various Amplitude APIs.
 package amplitude
 
 import (
@@ -13,7 +26,7 @@ import (
 
 const (
 	defaultBaseURL     = "https://api2.amplitude.com"
-	defaultUserAgent   = "go-amplitude"
+	defaultUserAgent   = "go-amplitude/v0"
 	defaultMediaType   = "application/json"
 	defaultContentType = "application/json"
 )
@@ -85,7 +98,7 @@ func (b RequestBody) WithValue(key string, v interface{}) RequestBody {
 	return b
 }
 
-// NewRequest provides an http request to be sent to Amplitude
+// NewRequest provides a http request to be sent to Amplitude
 func (c *Client) NewRequest(ctx context.Context, method, endpoint string, body RequestBody) (*http.Request, error) {
 	// if no endpoint is specified, then the base URL is used
 	var u *url.URL
@@ -110,7 +123,6 @@ func (c *Client) NewRequest(ctx context.Context, method, endpoint string, body R
 		}
 	}
 
-	// keep track of the context for all API requests will contain the context
 	req, err := http.NewRequestWithContext(ctx, method, u.String(), buf)
 	if err != nil {
 		return nil, err
@@ -128,7 +140,7 @@ func (c *Client) NewRequest(ctx context.Context, method, endpoint string, body R
 	return req, nil
 }
 
-// Do makes an http request to Amplitude and handles the response it receives
+// Do a http request to Amplitude and handles the response it receives
 func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	if req == nil {
 		return nil, errors.New("no request passed")
@@ -143,7 +155,7 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 		return nil, err
 	}
 
-	// if the response is an API error that we know about, this propagate it up the stack,
+	// if the response is an API error that we know about, this propagates it up the stack,
 	// if its one we don't know about check the error context for additional information
 	if err := AsError(resp); err != nil {
 		return nil, err
@@ -152,9 +164,7 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 	defer resp.Body.Close()
 
 	// we only support json responses (and so does the amplitude API)
-	switch v := v.(type) {
-	case nil:
-	default:
+	if v != nil {
 		if err := json.NewDecoder(resp.Body).Decode(v); err != nil && err != io.EOF {
 			return nil, err
 		}
@@ -164,7 +174,7 @@ func (c *Client) Do(req *http.Request, v interface{}) (*http.Response, error) {
 }
 
 // Error houses any potential http error responses from the API
-// The body is not well defined so more information can be obtained
+// The body is not well-defined so more information can be obtained
 // by access the context
 type Error struct {
 	Response *http.Response
@@ -174,7 +184,7 @@ type Error struct {
 // Code is an integer denoting what error has been received
 func (e *Error) Code() int {
 	raw := e.Context["code"]
-	// JSON unmarshals all numbers as floating point values,
+	// The JSON decoder will unmarshal all numbers as floating point values,
 	// but the code is actually expected to be an integer.
 	if code, ok := raw.(float64); ok {
 		return int(code)
@@ -183,7 +193,7 @@ func (e *Error) Code() int {
 	return 0
 }
 
-// Message is a human readable error denoting (hopefully) what has went wrong
+// Message is a human-readable error denoting (hopefully) what has gone wrong
 func (e *Error) Message() string {
 	raw := e.Context["error"]
 	if message, ok := raw.(string); ok {

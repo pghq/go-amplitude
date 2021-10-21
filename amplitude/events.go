@@ -8,7 +8,7 @@ type Event struct {
 	UserId              string                 `json:"user_id,omitempty"`
 	DeviceId            string                 `json:"device_id,omitempty"`
 	Name                string                 `json:"event_type"`
-	Time                uint                   `json:"time,omitempty"`
+	Time                int64                  `json:"time,omitempty"`
 	Properties          map[string]interface{} `json:"event_properties,omitempty"`
 	UserProperties      map[string]interface{} `json:"user_properties,omitempty"`
 	Groups              map[string]interface{} `json:"groups,omitempty"`

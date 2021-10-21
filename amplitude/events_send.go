@@ -2,10 +2,11 @@ package amplitude
 
 import (
 	"context"
-	"errors"
 	"fmt"
 	"net/http"
 	"time"
+
+	"github.com/pghq/go-museum/museum/diagnostic/errors"
 )
 
 const (
@@ -26,12 +27,12 @@ func (s *BatchEventsSuccessSummary) String() string {
 	return fmt.Sprintf("%d events ingested (%d bytes) at %s", s.EventsIngested, s.PayloadSize, timestamp)
 }
 
-// BatchUpload sends batches of events via the Batch Event Upload API
+// Send batches of events via the Batch Event Upload API
 // This endpoint is recommended for Customers that want to send large batches of data at a time,
 // for example through scheduled jobs, rather than in a continuous realtime stream.
 // Due to the higher rate of data that is permitted to this endpoint, data sent to this endpoint
 // may be delayed based on load.
-func (s *EventsService) BatchUpload(ctx context.Context, events []*Event) (*BatchEventsSuccessSummary, error) {
+func (s *EventsService) Send(ctx context.Context, events ...*Event) (*BatchEventsSuccessSummary, error) {
 	if len(events) == 0 {
 		return nil, errors.New("no events to send")
 	}
@@ -39,12 +40,12 @@ func (s *EventsService) BatchUpload(ctx context.Context, events []*Event) (*Batc
 	body := s.client.NewRequestBody().WithValue("events", events)
 	req, err := s.client.NewRequest(ctx, http.MethodPost, batchEventUploadEndpoint, body)
 	if err != nil {
-		return nil, err
+		return nil, errors.Wrap(err)
 	}
 
 	var res BatchEventsSuccessSummary
 	if _, err := s.client.Do(req, &res); err != nil {
-		return nil, err
+		return nil, errors.Wrap(err)
 	}
 
 	return &res, nil

@@ -17,7 +17,7 @@ func (m *SendMiddleware) Flush(ctx context.Context) {
 			return
 		default:
 			event := m.Event()
-			if event != nil{
+			if event != nil {
 				events = append(events, event)
 				continue
 			}

@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/mssola/user_agent v0.5.3
-	github.com/pghq/go-museum v0.0.16
+	github.com/pghq/go-museum v0.0.17
 	github.com/stretchr/testify v1.7.0
 )
 

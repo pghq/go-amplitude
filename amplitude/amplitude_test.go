@@ -16,7 +16,6 @@ import (
 
 	"github.com/pghq/go-museum/museum/diagnostic/errors"
 	"github.com/pghq/go-museum/museum/diagnostic/log"
-	"github.com/pghq/go-museum/museum/pilot"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -565,9 +564,9 @@ func TestSendMiddleware(t *testing.T){
 		m := c.SendMiddleware()
 		r := httptest.NewRequest("GET", "/tests", nil)
 		w := httptest.NewRecorder()
-		m.Handle(pilot.NoopHandler).ServeHTTP(w, r)
+		m.Handle(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})).ServeHTTP(w, r)
 		m.DeviceHeader("Device-Id")
-		m.Handle(pilot.NoopHandler).ServeHTTP(w, r)
+		m.Handle(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})).ServeHTTP(w, r)
 
 		assert.Empty(t, m.events)
 	})
@@ -645,7 +644,7 @@ func TestSendMiddleware(t *testing.T){
 		c, mux, teardown := setup()
 		defer teardown()
 
-		mux.HandleFunc(batchEventUploadEndpoint, pilot.NoopHandler)
+		mux.HandleFunc(batchEventUploadEndpoint, func(w http.ResponseWriter, r *http.Request) {})
 		m := c.SendMiddleware()
 		ctx := context.Background()
 

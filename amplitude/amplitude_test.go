@@ -512,7 +512,7 @@ func TestBatchEventUploadService_Send(t *testing.T) {
 	})
 }
 
-func TestSendMiddleware(t *testing.T){
+func TestSendMiddleware(t *testing.T) {
 	c := New("")
 
 	t.Run("can create instance", func(t *testing.T) {
@@ -539,7 +539,7 @@ func TestSendMiddleware(t *testing.T){
 		assert.NotNil(t, m.Error())
 		assert.Nil(t, m.Error())
 
-		for i := 0; i <= cap(m.errors); i++{
+		for i := 0; i <= cap(m.errors); i++ {
 			m.SendError(errors.New("an error has occurred"))
 		}
 
@@ -553,7 +553,7 @@ func TestSendMiddleware(t *testing.T){
 		assert.NotNil(t, m.Event())
 		assert.Nil(t, m.Event())
 
-		for i := 0; i <= cap(m.events); i++{
+		for i := 0; i <= cap(m.events); i++ {
 			m.Send(&Event{})
 		}
 
